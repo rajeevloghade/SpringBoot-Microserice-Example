@@ -15,4 +15,18 @@ public class MovieResource {
 	public Movie getResource(@PathVariable("movieId") String movieId) {
 		return new Movie(movieId, "Test Name");
 	}
+
+//	@Value("${api.key}")
+//	private String apiKey;
+//
+//	@Autowired
+//	private RestTemplate restTemplate;
+//
+//	@RequestMapping("/{movieId}")
+//	public Movie getMovieInfo(@PathVariable("movieId") String movieId) {
+//		MovieSummary movieSummary = restTemplate.getForObject(
+//				"https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey, MovieSummary.class);
+//		return new Movie(movieId, movieSummary.getTitle(), movieSummary.getOverview());
+//	}
+
 }
