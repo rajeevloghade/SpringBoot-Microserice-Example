@@ -3,6 +3,8 @@ package io.javabrains.moviecatalogservice.resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,8 @@ public class MovieControllerResource {
 
 	@Autowired
 	private WebClient.Builder webClientBuilder;
+
+	Logger log = LoggerFactory.getLogger(MovieControllerResource.class);
 
 //	@GetMapping("/{userId}")
 //	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
@@ -73,6 +77,7 @@ public class MovieControllerResource {
 	@GetMapping("/{userId}")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
+		log.trace("Inside MovieControllerResource class getCatalog invoked with userId : {}", userId);
 //		List<Rating> ratings = Arrays.asList(new Rating("AAA", 7), new Rating("BBB", 8), new Rating("CCC", 9));
 //		UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingdata/user/" + userId,
 //				UserRating.class);
@@ -84,7 +89,7 @@ public class MovieControllerResource {
 //			Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
 			Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(),
 					Movie.class);
-			
+
 			return new CatalogItem(movie.getName(), "Description", rating.getRating());
 		}).collect(Collectors.toList());
 	}
