@@ -1,5 +1,6 @@
 package io.javabrains.moviecatalogservice.resource;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,9 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import io.javabrains.moviecatalogservice.models.CatalogItem;
 import io.javabrains.moviecatalogservice.models.Movie;
+import io.javabrains.moviecatalogservice.models.Rating;
 import io.javabrains.moviecatalogservice.models.UserRating;
+import io.javabrains.moviecatalogservice.service.MovieInfo;
+import io.javabrains.moviecatalogservice.service.UserRatingInfo;
 
 @RestController
 @RequestMapping("/catalog")
@@ -23,6 +29,12 @@ public class MovieControllerResource {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	private MovieInfo movieInfo;
+
+	@Autowired
+	private UserRatingInfo userRatingInfo;
 
 	@Autowired
 	private WebClient.Builder webClientBuilder;
@@ -81,16 +93,42 @@ public class MovieControllerResource {
 //		List<Rating> ratings = Arrays.asList(new Rating("AAA", 7), new Rating("BBB", 8), new Rating("CCC", 9));
 //		UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingdata/user/" + userId,
 //				UserRating.class);
-		UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingdata/user/" + userId,
-				UserRating.class);
+//		UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingdata/user/" + userId,
+//				UserRating.class);
+
+		// for Hystrix
+		UserRating ratings = userRatingInfo.getUserRating(userId);
 
 		return ratings.getUserRatings().stream().map(rating -> {
 
 //			Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
-			Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(),
-					Movie.class);
+//			Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(),
+//					Movie.class);
 
-			return new CatalogItem(movie.getName(), "Description", rating.getRating());
+			// for Hystrix
+			return movieInfo.getCatalogItem(rating);
 		}).collect(Collectors.toList());
 	}
+
+//	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem")
+//	private CatalogItem getCatalogItem(Rating rating) {
+//		Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
+//		return new CatalogItem(movie.getName(), "Description", rating.getRating());
+//	}
+//
+//	private CatalogItem getFallbackCatalogItem(Rating rating) {
+//		return new CatalogItem("No movie found", "No Description", rating.getRating());
+//	}
+
+//	@HystrixCommand(fallbackMethod = "getFallbackUserRating")
+//	private UserRating getUserRating(String userId) {
+//		return restTemplate.getForObject("http://ratings-data-service/ratingdata/user/" + userId, UserRating.class);
+//	}
+//
+//	private UserRating getFallbackUserRating(String userId) {
+//		UserRating userRating = new UserRating();
+//		userRating.setUserRatings(Arrays.asList(new Rating("No movie found", 0)));
+//		return userRating;
+//	}
+
 }
