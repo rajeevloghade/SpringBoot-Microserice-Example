@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
 import io.javabrains.moviecatalogservice.models.CatalogItem;
 import io.javabrains.moviecatalogservice.models.Movie;
@@ -110,12 +111,16 @@ public class MovieControllerResource {
 		}).collect(Collectors.toList());
 	}
 
-//	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem")
+//	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem", commandProperties = {
+//			@HystrixProperty(name = "execution.isolation.thread.timeoutInMillisecond", value = "2000"),
+//			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+//			@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+//			@HystrixProperty(name = "circuitBreaker.sleepWindowInMillisecond", value = "5000") })
 //	private CatalogItem getCatalogItem(Rating rating) {
 //		Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
 //		return new CatalogItem(movie.getName(), "Description", rating.getRating());
 //	}
-//
+
 //	private CatalogItem getFallbackCatalogItem(Rating rating) {
 //		return new CatalogItem("No movie found", "No Description", rating.getRating());
 //	}
@@ -124,7 +129,7 @@ public class MovieControllerResource {
 //	private UserRating getUserRating(String userId) {
 //		return restTemplate.getForObject("http://ratings-data-service/ratingdata/user/" + userId, UserRating.class);
 //	}
-//
+
 //	private UserRating getFallbackUserRating(String userId) {
 //		UserRating userRating = new UserRating();
 //		userRating.setUserRatings(Arrays.asList(new Rating("No movie found", 0)));
