@@ -3,6 +3,7 @@ package io.javabrains.moviecatalogservice.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +18,9 @@ import io.javabrains.moviecatalogservice.resource.MovieControllerResource;
 @Service
 public class MovieInfo {
 
+	@Value("${server.port}")
+	private String portNumber;
+	
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -44,13 +48,13 @@ public class MovieInfo {
 	public CatalogItem getCatalogItem(Rating rating) {
 		log.debug("Inside MovieInfo service class getCatalogItem method invoked with rating object :{}", rating);
 		Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
-		return new CatalogItem(movie.getName(), "Description", rating.getRating());
+		return new CatalogItem(movie.getName(), "Description", rating.getRating(), portNumber);
 	}
 
 	public CatalogItem getFallbackCatalogItem(Rating rating) {
 		log.debug("Inside MovieInfo service class getFallbackCatalogItem method invoked with rating object :{}",
 				rating);
-		return new CatalogItem("No movie found", "No Description", rating.getRating());
+		return new CatalogItem("No movie found", "No Description", rating.getRating(), portNumber);
 	}
 
 }

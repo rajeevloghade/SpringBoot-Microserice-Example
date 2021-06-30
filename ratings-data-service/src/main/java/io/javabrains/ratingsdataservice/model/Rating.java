@@ -4,15 +4,25 @@ public class Rating {
 
 	private String movieId;
 	private int rating;
+	private String portNumber;
 
 	public Rating() {
 		super();
 	}
 
-	public Rating(String movieId, int rating) {
+	public Rating(String movieId, int rating, String portNumber) {
 		super();
 		this.movieId = movieId;
 		this.rating = rating;
+		this.portNumber = portNumber;
+	}
+
+	public String getPortNumber() {
+		return portNumber;
+	}
+
+	public void setPortNumber(String portNumber) {
+		this.portNumber = portNumber;
 	}
 
 	public String getMovieId() {
@@ -33,7 +43,7 @@ public class Rating {
 
 	@Override
 	public String toString() {
-		return "Rating [movieId=" + movieId + ", rating=" + rating + "]";
+		return "Rating [movieId=" + movieId + ", rating=" + rating + ", portNumber=" + portNumber + "]";
 	}
 
 }

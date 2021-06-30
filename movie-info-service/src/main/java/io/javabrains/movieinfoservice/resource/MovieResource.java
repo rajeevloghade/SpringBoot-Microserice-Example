@@ -2,6 +2,7 @@ package io.javabrains.movieinfoservice.resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +14,15 @@ import io.javabrains.movieinfoservice.models.Movie;
 @RequestMapping("/movies")
 public class MovieResource {
 
+	@Value("${server.port}")
+	private String portNumber;
+
 	Logger log = LoggerFactory.getLogger(MovieResource.class);
 
 	@GetMapping("/{movieId}")
 	public Movie getResource(@PathVariable("movieId") String movieId) {
 		log.trace("Inside MovieResource class getResource invoked with movieId : {}", movieId);
-		return new Movie(movieId, "Test Name");
+		return new Movie(movieId, "Test Name", "desciption", portNumber);
 	}
 
 //	@Value("${api.key}")

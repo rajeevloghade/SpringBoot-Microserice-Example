@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,6 +19,9 @@ import io.javabrains.moviecatalogservice.resource.MovieControllerResource;
 @Service
 public class UserRatingInfo {
 
+	@Value("${server.port}")
+	private String portNumber;
+	
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -44,7 +48,7 @@ public class UserRatingInfo {
 	public UserRating getFallbackUserRating(String userId) {
 		log.debug("Inside UserRatingInfo service class getFallbackUserRating method invoked with userId :{}", userId);
 		UserRating userRating = new UserRating();
-		userRating.setUserRatings(Arrays.asList(new Rating("No movie found", 0)));
+		userRating.setUserRatings(Arrays.asList(new Rating("No movie found", 0, portNumber)));
 		return userRating;
 	}
 }

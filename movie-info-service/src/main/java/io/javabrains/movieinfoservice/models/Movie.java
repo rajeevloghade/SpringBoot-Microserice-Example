@@ -4,6 +4,7 @@ public class Movie {
 	private String movieId;
 	private String name;
 	private String description;
+	private String portNumber;
 
 	public Movie() {
 		super();
@@ -18,6 +19,22 @@ public class Movie {
 		this.movieId = movieId;
 		this.name = name;
 		this.description = description;
+	}
+
+	public Movie(String movieId, String name, String description, String portNumber) {
+		super();
+		this.movieId = movieId;
+		this.name = name;
+		this.description = description;
+		this.portNumber = portNumber;
+	}
+
+	public String getPortNumber() {
+		return portNumber;
+	}
+
+	public void setPortNumber(String portNumber) {
+		this.portNumber = portNumber;
 	}
 
 	public String getMovieId() {
@@ -46,6 +63,7 @@ public class Movie {
 
 	@Override
 	public String toString() {
-		return "Movie [movieId=" + movieId + ", name=" + name + ", description=" + description + "]";
+		return "Movie [movieId=" + movieId + ", name=" + name + ", description=" + description + ", portNumber="
+				+ portNumber + "]";
 	}
 }
