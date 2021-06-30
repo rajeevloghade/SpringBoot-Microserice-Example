@@ -37,7 +37,7 @@ public class GreetingController {
 	@GetMapping("/greeting")
 	public String greeting() {
 //		return "Hello from rest controller";
-		return greetMessage + " " + staticMsg + " " + listValues + " " + dbValues;
+		return greetMessage  + " " + staticMsg + " " + listValues + " " + dbValues ;
 	}
 
 	@GetMapping("/staticMsg")
